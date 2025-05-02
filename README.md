@@ -1,27 +1,60 @@
-# 🎮 Personal Gamification Tracker
+# 🎮 RaízXP – Personal Gamification Tracker
 
-Esta app es un sistema de gamificación personalizado que desarrollé para motivarme en mi búsqueda de empleo y en mis hábitos personales. Está pensada para personas autodidactas, neurodivergentes o simplemente inconformes con los sistemas tradicionales de productividad.
+**RaízXP** is a personal gamification system I created to stay motivated while building habits and searching for my first job in data science. It’s designed for people who take non-traditional paths, learn independently, and value progress that isn’t always linear.
 
-## 🚀 ¿Qué hace esta app?
+## 🚀 What does this app do?
 
-- Registrar tareas profesionales y personales con puntos personalizados
-- Llevar un seguimiento de progreso diario y semanal
-- Visualizar un historial de acciones completadas
-- Servir como motor motivacional en procesos largos y solitarios
+- Track professional and personal tasks
+- Assign custom points to actions (like publishing on LinkedIn or completing a job application)
+- Log and review daily/weekly progress
+- Visualize your journey in a motivating, simple interface
+- Build your own reward system (interviews = bonus points!)
 
-## 📌 Tecnologías utilizadas
+## 💡 Why I built it
 
-- [Streamlit](https://streamlit.io/) – Framework para apps web rápidas en Python
-- [Pandas](https://pandas.pydata.org/) – Manipulación de datos
+I don’t have a college degree, but I’ve spent years learning, creating, and growing outside the system.  
+Traditional productivity tools never matched how I think or feel — so I created my own.
 
-## 📷 Captura de pantalla
+This app keeps me grounded. It shows me that I’m moving, even when the world feels silent.
 
-_Acá podés incluir una imagen o gif de la app funcionando_
+## 🛠️ Tech stack
 
-## 📦 Cómo ejecutarla localmente
+- [Streamlit](https://streamlit.io/) – for fast interactive UI
+- [Pandas](https://pandas.pydata.org/) – for data storage and tracking
+- Python 3.9+
 
-1. Cloná el repositorio:
+## 📷 Screenshot
+
+_Add a screenshot or GIF demo here to make the post more engaging_
+
+## 🔧 How to run the app locally
+
+1. Clone the repository:
+
 ```bash
-git clone https://github.com/tu_usuario/personal-gamification-tracker.git
-cd personal-gamification-tracker
+git clone https://github.com/your_username/raizxp.git
+cd raizxp
+```
 
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3.  Launch the app:
+
+```bash
+streamlit run gamification_tracker_app.py
+```
+
+Author: 
+Gabriel Felipe Fernandes Pinheiro
+📍 Based in Spain | 🌊 Inspired by climbing, surfing, and lifelong learning
+🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro)
+
+
+✨ I believe growth should feel alive, not mechanical.
+If you feel the same, I’d love to connect.
+
+---
