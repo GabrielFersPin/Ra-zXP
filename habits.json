@@ -1,0 +1,29 @@
+{
+    "habits": [
+        {
+            "name": "Daily Coding",
+            "category": "Professional",
+            "points": 5
+        },
+        {
+            "name": "LinkedIn Post",
+            "category": "Professional",
+            "points": 10
+        },
+        {
+            "name": "Job Application",
+            "category": "Professional",
+            "points": 15
+        },
+        {
+            "name": "Exercise",
+            "category": "Personal",
+            "points": 5
+        },
+        {
+            "name": "Reading",
+            "category": "Personal",
+            "points": 3
+        }
+    ]
+}
