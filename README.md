@@ -1,6 +1,3 @@
-# PathPoints
-Gamification app to track your habits and taks.
-
 # 🎮 Personal Gamification Tracker
 
 Esta app es un sistema de gamificación personalizado que desarrollé para motivarme en mi búsqueda de empleo y en mis hábitos personales. Está pensada para personas autodidactas, neurodivergentes o simplemente inconformes con los sistemas tradicionales de productividad.
