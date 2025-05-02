@@ -45,7 +45,7 @@ pip install -r requirements.txt
 3.  Launch the app:
 
 ```bash
-streamlit run gamification_tracker_app.py
+streamlit run app.py
 ```
 
 Author: 
