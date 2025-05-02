@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import datetime
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import plotly.express as px
+import plotly.graph_objects as go
 import os
 import json
 from uuid import uuid4
@@ -9,6 +18,7 @@ from uuid import uuid4
 TASKS_FILE = "task_log.csv"
 HABITS_FILE = "habits.json"
 TODO_FILE = "todo.csv"
+REWARDS_FILE = "rewards.json"  # Add this line
 
 # Initialize files if they don't exist
 if not os.path.exists(TASKS_FILE):
@@ -32,6 +42,19 @@ if not os.path.exists(HABITS_FILE):
     with open(HABITS_FILE, "w") as f:
         json.dump(habits_init, f, indent=4)
 
+# Initialize the rewards file
+if not os.path.exists(REWARDS_FILE):
+    rewards_init = {
+        "rewards": [
+            {"id": str(uuid4()), "name": "Coffee Shop Visit", "description": "Treat yourself to a nice coffee", "points_required": 50, "category": "Small Treat", "redeemed": False},
+            {"id": str(uuid4()), "name": "Movie Night", "description": "Watch that movie you've been wanting to see", "points_required": 100, "category": "Entertainment", "redeemed": False},
+            {"id": str(uuid4()), "name": "New Book", "description": "Buy that book from your wishlist", "points_required": 200, "category": "Learning", "redeemed": False}
+        ],
+        "redeemed_history": []
+    }
+    with open(REWARDS_FILE, "w") as f:
+        json.dump(rewards_init, f, indent=4)
+
 # Load existing data
 tasks_df = pd.read_csv(TASKS_FILE)
 todo_df = pd.read_csv(TODO_FILE)
@@ -44,7 +67,7 @@ st.set_page_config(page_title="RaízXP | Gamification Tracker", layout="wide")
 
 # Sidebar navigation
 st.sidebar.title("🎮 RaízXP")
-page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List"])
+page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List", "Rewards"])
 
 # Helper functions
 def load_data():
@@ -53,14 +76,28 @@ def load_data():
     todo_df = pd.read_csv(TODO_FILE)
     with open(HABITS_FILE, "r") as f:
         habits_data = json.load(f)
-    return tasks_df, todo_df, habits_data
+    with open(REWARDS_FILE, "r") as f:
+        rewards_data = json.load(f)
+    return tasks_df, todo_df, habits_data, rewards_data
+
+def calculate_available_points():
+    """Calculate available points (total minus redeemed)"""
+    tasks_df = pd.read_csv(TASKS_FILE)
+    total_earned = tasks_df["Points"].sum() if not tasks_df.empty else 0
+    
+    with open(REWARDS_FILE, "r") as f:
+        rewards_data = json.load(f)
+    
+    redeemed_points = sum(item["points_required"] for item in rewards_data["redeemed_history"])
+    
+    return total_earned - redeemed_points
 
 # Dashboard page
 if page == "Dashboard":
     st.title("🎯 RaízXP - Personal Gamification Tracker")
     
     # Load the latest data
-    tasks_df, todo_df, habits_data = load_data()
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
     
     # Calculate metrics
     total_points = tasks_df["Points"].sum() if not tasks_df.empty else 0
@@ -116,7 +153,7 @@ if page == "Dashboard":
 elif page == "Log Activity":
     st.title("📝 Log Your Activity")
     
-    tasks_df, todo_df, habits_data = load_data()
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
     
     # Create tabs for quick log vs. custom log
     log_tab1, log_tab2 = st.tabs(["Quick Log", "Custom Activity"])
@@ -214,7 +251,7 @@ elif page == "Log Activity":
 elif page == "Manage Habits":
     st.title("⚙️ Manage Your Habits")
     
-    tasks_df, todo_df, habits_data = load_data()
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
     
     # Display existing habits
     st.subheader("Your Current Habits")
@@ -315,7 +352,7 @@ elif page == "Manage Habits":
 elif page == "To-Do List":
     st.title("📋 To-Do List")
     
-    tasks_df, todo_df, habits_data = load_data()
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
     
     # Create a new todo item
     st.subheader("Add New To-Do Item")
@@ -418,6 +455,135 @@ elif page == "To-Do List":
                 st.markdown("---")
     else:
         st.info("No to-do items match your filter criteria.")
+
+# Rewards page
+elif page == "Rewards":
+    st.title("🎁 Rewards")
+    
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
+    
+    # Calculate available points
+    available_points = calculate_available_points()
+    
+    # Display current points and progress
+    st.header("Your Points")
+    col1, col2 = st.columns(2)
+    with col1:
+        
+        # Get unredeemed rewards
+        unredeemed_rewards = [r for r in rewards_data["rewards"] if not r["redeemed"]]
+        
+        if unredeemed_rewards:
+            # Sort by points required
+            unredeemed_rewards.sort(key=lambda x: x["points_required"])
+            
+            # Create a grid layout for rewards
+            for i in range(0, len(unredeemed_rewards), 3):
+                cols = st.columns(3)
+                for j in range(3):
+                    if i+j < len(unredeemed_rewards):
+                        reward = unredeemed_rewards[i+j]
+                        with cols[j]:
+                            st.markdown(f"### 🎁 {reward['name']}")
+                            st.markdown(f"**{reward['points_required']} points**")
+                            st.markdown(f"*{reward['description']}*")
+                            st.markdown(f"*Category: {reward['category']}*")
+                            
+                            # Visual progress bar
+                            progress = min(1.0, available_points / reward["points_required"])
+                            st.progress(progress)
+                            st.text(f"{available_points}/{reward['points_required']} points")
+                            
+                            # Redeem button - enabled only if enough points
+                            if available_points >= reward["points_required"]:
+                                if st.button("Redeem Reward", key=f"redeem_{reward['id']}"):
+                                    # Move to redeemed history with timestamp
+                                    rewards_data["redeemed_history"].append({
+                                        "reward_id": reward["id"],
+                                        "name": reward["name"],
+                                        "points_cost": reward["points_required"],
+                                        "redeemed_on": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                    })
+                                    # Mark as redeemed
+                                    for r in rewards_data["rewards"]:
+                                        if r["id"] == reward["id"]:
+                                            r["redeemed"] = True
+                                            break
+                                    
+                                    # Save updated rewards data
+                                    with open(REWARDS_FILE, "w") as f:
+                                        json.dump(rewards_data, f, indent=4)
+                                    
+                                    st.balloons()
+                                    st.success(f"🎉 You've redeemed '{reward['name']}'! Enjoy your reward!")
+                                    st.experimental_rerun()
+                            else:
+                                st.button("Not Enough Points", disabled=True, key=f"disabled_{reward['id']}")
+                            
+                            st.markdown("---")
+        else:
+            st.info("No rewards available. Add some in the 'Add New Reward' tab!")
+    
+    with reward_tab2:
+        st.subheader("Create a New Reward")
+        
+        with st.form("add_reward_form"):
+            reward_name = st.text_input("Reward Name")
+            reward_desc = st.text_area("Description")
+            reward_points = st.number_input("Points Required", min_value=1, value=50, step=5)
+            reward_category = st.selectbox("Category", [
+                "Small Treat", "Entertainment", "Learning", "Self-Care", 
+                "Gaming", "Shopping", "Social", "Excursion", "Lazy Day", "Custom"
+            ])
+            
+            if reward_category == "Custom":
+                custom_category = st.text_input("Enter Custom Category")
+            
+            submit_reward = st.form_submit_button("Add Reward")
+        
+        if submit_reward:
+            if not reward_name:
+                st.error("Please enter a reward name.")
+            else:
+                # Create new reward
+                new_reward = {
+                    "id": str(uuid4()),
+                    "name": reward_name,
+                    "description": reward_desc,
+                    "points_required": reward_points,
+                    "category": custom_category if reward_category == "Custom" else reward_category,
+                    "redeemed": False
+                }
+                
+                # Add to rewards list
+                rewards_data["rewards"].append(new_reward)
+                
+                # Save updated rewards
+                with open(REWARDS_FILE, "w") as f:
+                    json.dump(rewards_data, f, indent=4)
+                
+                st.success(f"✅ New reward added: {reward_name}")
+                
+                # Refresh data
+                with open(REWARDS_FILE, "r") as f:
+                    rewards_data = json.load(f)
+    
+    with reward_tab3:
+        st.subheader("Redemption History")
+        
+        if rewards_data["redeemed_history"]:
+            # Convert to DataFrame for better display
+            history_df = pd.DataFrame(rewards_data["redeemed_history"])
+            history_df = history_df.rename(columns={
+                "name": "Reward",
+                "points_cost": "Points Cost",
+                "redeemed_on": "Redeemed On"
+            })
+            
+            st.dataframe(history_df[["Reward", "Points Cost", "Redeemed On"]].sort_values(
+                by="Redeemed On", ascending=False), use_container_width=True)
+        else:
+            st.info("No rewards have been redeemed yet.")
 
 # Footer
 st.sidebar.markdown("---")

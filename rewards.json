@@ -1,0 +1,29 @@
+{
+    "rewards": [
+        {
+            "id": "997bb35c-c0e4-42e0-bd02-c2af7b522d1c",
+            "name": "Coffee Shop Visit",
+            "description": "Treat yourself to a nice coffee",
+            "points_required": 50,
+            "category": "Small Treat",
+            "redeemed": false
+        },
+        {
+            "id": "da922213-381f-401b-9cd5-921dc8838986",
+            "name": "Movie Night",
+            "description": "Watch that movie you've been wanting to see",
+            "points_required": 100,
+            "category": "Entertainment",
+            "redeemed": false
+        },
+        {
+            "id": "ff266b4e-dd2f-4d1c-bdd7-35d0dbd1442d",
+            "name": "New Book",
+            "description": "Buy that book from your wishlist",
+            "points_required": 200,
+            "category": "Learning",
+            "redeemed": false
+        }
+    ],
+    "redeemed_history": []
+}
