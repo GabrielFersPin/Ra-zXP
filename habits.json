@@ -2,13 +2,13 @@
     "habits": [
         {
             "name": "Daily Coding",
-            "category": "Professional",
-            "points": 5
+            "category": "Personal",
+            "points": 10
         },
         {
             "name": "LinkedIn Post",
             "category": "Professional",
-            "points": 10
+            "points": 15
         },
         {
             "name": "Job Application",
@@ -23,7 +23,17 @@
         {
             "name": "Reading",
             "category": "Personal",
-            "points": 3
+            "points": 10
+        },
+        {
+            "name": "Interview",
+            "category": "Professional",
+            "points": 50
+        },
+        {
+            "name": "Interpersonal Connect",
+            "category": "Professional",
+            "points": 30
         }
     ]
 }

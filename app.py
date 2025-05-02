@@ -185,8 +185,9 @@ elif page == "Log Activity":
     # Filters
     col1, col2 = st.columns(2)
     with col1:
+        category_options = ["All"] + list(tasks_df["Category"].unique()) if not tasks_df.empty else ["All"]
         filter_category = st.multiselect("Filter by Category", 
-                                        options=["All"] + list(tasks_df["Category"].unique()),
+                                        options=category_options,
                                         default="All")
     with col2:
         date_range = st.date_input("Date Range",
@@ -197,8 +198,8 @@ elif page == "Log Activity":
     filtered_df = tasks_df.copy()
     if filter_category and "All" not in filter_category:
         filtered_df = filtered_df[filtered_df["Category"].isin(filter_category)]
-    
-    if len(date_range) == 2:
+
+    if len(date_range) == 2 and not filtered_df.empty:
         start_date, end_date = date_range
         filtered_df = filtered_df[(filtered_df["Date"] >= start_date.strftime("%Y-%m-%d")) & 
                                  (filtered_df["Date"] <= end_date.strftime("%Y-%m-%d"))]
