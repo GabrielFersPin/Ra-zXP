@@ -67,9 +67,23 @@ st.set_page_config(page_title="RaízXP | Gamification Tracker", layout="wide")
 
 # Sidebar navigation
 st.sidebar.title("🎮 RaízXP")
-page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List", "Rewards"])
+page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List", "Rewards", "Analytics"])
 
 # Helper functions
+def load_task_data():
+    try:
+        df = pd.read_csv("task_log.csv")
+        required_columns = ["Date", "Category", "Task", "Points", "Comment"]
+        if not all(col in df.columns for col in required_columns):
+            st.error("Invalid CSV format: Missing required columns")
+            return pd.DataFrame(columns=required_columns)
+        return df
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["Date", "Category", "Task", "Points", "Comment"])
+    except Exception as e:
+        st.error(f"Error loading data: {str(e)}")
+        return pd.DataFrame(columns=["Date", "Category", "Task", "Points", "Comment"])
+
 def load_data():
     """Reload all data sources"""
     tasks_df = pd.read_csv(TASKS_FILE)
