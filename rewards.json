@@ -23,6 +23,14 @@
             "points_required": 200,
             "category": "Learning",
             "redeemed": false
+        },
+        {
+            "id": "2fc02fc8-a13b-4122-aa71-17f2426ca20f",
+            "name": "Free Day",
+            "description": "Have a day with no code creation or any hard activity, just enjoy",
+            "points_required": 200,
+            "category": "Lazy Day",
+            "redeemed": false
         }
     ],
     "redeemed_history": []

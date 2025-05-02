@@ -148,10 +148,10 @@ if page == "Dashboard":
     # Recent activities
     st.subheader("Recent Activities")
     if not tasks_df.empty:
-        st.dataframe(tasks_df.sort_values(by="Date", ascending=False).head(5), use_container_width=True)
+        recent_activities = tasks_df[["Date", "Category", "Task", "Points", "Comment"]]
+        st.dataframe(recent_activities.sort_values(by="Date", ascending=False).head(5), use_container_width=True)
     else:
         st.info("No activities logged yet. Start by adding some in the 'Log Activity' section!")
-    
     # Pending to-do items
     st.subheader("Pending To-Do Items")
     if not todo_df.empty:
@@ -479,62 +479,59 @@ elif page == "Rewards":
     # Calculate available points
     available_points = calculate_available_points()
     
-    # Display current points and progress
-    st.header("Your Points")
-    col1, col2 = st.columns(2)
-    with col1:
-        
+    # Create tabs for rewards management
+    reward_tab1, reward_tab2, reward_tab3 = st.tabs(["Available Rewards", "Add New Reward", "Redemption History"])
+    
+    # Display current points
+    st.metric("Available Points", available_points)
+
+    with reward_tab1:
         # Get unredeemed rewards
         unredeemed_rewards = [r for r in rewards_data["rewards"] if not r["redeemed"]]
         
         if unredeemed_rewards:
-            # Sort by points required
-            unredeemed_rewards.sort(key=lambda x: x["points_required"])
+            st.subheader("Available Rewards")
             
-            # Create a grid layout for rewards
-            for i in range(0, len(unredeemed_rewards), 3):
-                cols = st.columns(3)
-                for j in range(3):
-                    if i+j < len(unredeemed_rewards):
-                        reward = unredeemed_rewards[i+j]
-                        with cols[j]:
-                            st.markdown(f"### 🎁 {reward['name']}")
-                            st.markdown(f"**{reward['points_required']} points**")
-                            st.markdown(f"*{reward['description']}*")
-                            st.markdown(f"*Category: {reward['category']}*")
-                            
-                            # Visual progress bar
-                            progress = min(1.0, available_points / reward["points_required"])
-                            st.progress(progress)
-                            st.text(f"{available_points}/{reward['points_required']} points")
-                            
-                            # Redeem button - enabled only if enough points
-                            if available_points >= reward["points_required"]:
-                                if st.button("Redeem Reward", key=f"redeem_{reward['id']}"):
-                                    # Move to redeemed history with timestamp
-                                    rewards_data["redeemed_history"].append({
-                                        "reward_id": reward["id"],
-                                        "name": reward["name"],
-                                        "points_cost": reward["points_required"],
-                                        "redeemed_on": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                                    })
-                                    # Mark as redeemed
-                                    for r in rewards_data["rewards"]:
-                                        if r["id"] == reward["id"]:
-                                            r["redeemed"] = True
-                                            break
-                                    
-                                    # Save updated rewards data
-                                    with open(REWARDS_FILE, "w") as f:
-                                        json.dump(rewards_data, f, indent=4)
-                                    
-                                    st.balloons()
-                                    st.success(f"🎉 You've redeemed '{reward['name']}'! Enjoy your reward!")
-                                    st.experimental_rerun()
-                            else:
-                                st.button("Not Enough Points", disabled=True, key=f"disabled_{reward['id']}")
-                            
-                            st.markdown("---")
+            # Create columns for rewards display
+            cols = st.columns(3)
+            col_index = 0
+            
+            for reward in unredeemed_rewards:
+                with cols[col_index]:
+                    with st.container():
+                        st.markdown(f"### {reward['name']}")
+                        st.write(f"*{reward['description']}*")
+                        st.write(f"**Category:** {reward['category']}")
+                        st.write(f"**Points Required:** {reward['points_required']}")
+                        
+                        # Add redeem button if user has enough points
+                        if available_points >= reward['points_required']:
+                            if st.button("Redeem Reward", key=f"redeem_{reward['id']}"):
+                                # Add to redemption history
+                                rewards_data["redeemed_history"].append({
+                                    "id": reward["id"],
+                                    "name": reward["name"],
+                                    "points_cost": reward["points_required"],
+                                    "redeemed_on": datetime.date.today().strftime("%Y-%m-%d")
+                                })
+                                
+                                # Mark as redeemed
+                                for r in rewards_data["rewards"]:
+                                    if r["id"] == reward["id"]:
+                                        r["redeemed"] = True
+                                        break
+                                
+                                # Save updated rewards data
+                                with open(REWARDS_FILE, "w") as f:
+                                    json.dump(rewards_data, f, indent=4)
+                                
+                                st.success(f"✅ Reward redeemed: {reward['name']}")
+                                st.experimental_rerun()
+                        else:
+                            st.warning(f"Need {reward['points_required'] - available_points} more points")
+                
+                # Update column index
+                col_index = (col_index + 1) % 3
         else:
             st.info("No rewards available. Add some in the 'Add New Reward' tab!")
     
