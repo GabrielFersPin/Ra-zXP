@@ -21,7 +21,7 @@ This app keeps me grounded. It shows me that I’m moving, even when the world f
 
 ## 📷 Preview
 
-[Video](images/Screencast from 2025-05-04 11-32-55.webm)
+[Video](images/Screencastfrom2025-05-0411-32-55-ezgif.com-optimize.gif)
 
 ## 🔧 How to run the app locally
 
