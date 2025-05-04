@@ -596,6 +596,93 @@ elif page == "Rewards":
         else:
             st.info("No rewards have been redeemed yet.")
 
+# Analytics page
+elif page == "Analytics":
+    st.title("📊 Performance Analytics")
+    
+    tasks_df, todo_df, habits_data, rewards_data = load_data()
+    
+    if not tasks_df.empty:
+        # Convert Date to datetime
+        tasks_df['Date'] = pd.to_datetime(tasks_df['Date'])
+        
+        # Create tabs for different analyses
+        analysis_tab1, analysis_tab2, analysis_tab3 = st.tabs(["Productivity Analysis", "Trends & Patterns", "Task Categories"])
+        
+        with analysis_tab1:
+            st.subheader("Daily Productivity Analysis")
+            
+            # Points per day of week
+            daily_points = tasks_df.groupby(tasks_df['Date'].dt.day_name())['Points'].agg(['sum', 'count'])
+            daily_points = daily_points.reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+            
+            fig = px.bar(daily_points, 
+                        y='sum',
+                        title='Points Earned by Day of Week',
+                        labels={'sum': 'Total Points', 'index': 'Day of Week'},
+                        color='count',
+                        color_continuous_scale='Viridis')
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Most productive day
+            most_productive = daily_points['sum'].idxmax()
+            st.info(f"📌 Your most productive day is **{most_productive}** with {daily_points.loc[most_productive, 'sum']:.0f} total points!")
+        
+        with analysis_tab2:
+            st.subheader("Trends & Patterns")
+            
+            # Time series of points
+            daily_total = tasks_df.groupby('Date')['Points'].sum().reset_index()
+            fig_trend = px.line(daily_total, 
+                              x='Date', 
+                              y='Points',
+                              title='Points Earned Over Time')
+            st.plotly_chart(fig_trend, use_container_width=True)
+            
+            # Rolling average
+            rolling_avg = daily_total.set_index('Date')['Points'].rolling(window=7).mean()
+            fig_rolling = px.line(rolling_avg,
+                                title='7-Day Rolling Average of Points',
+                                labels={'value': 'Points (7-day avg)'})
+            st.plotly_chart(fig_rolling, use_container_width=True)
+            
+            # Streak analysis
+            active_days = tasks_df['Date'].dt.date.nunique()
+            total_days = (tasks_df['Date'].max() - tasks_df['Date'].min()).days + 1
+            activity_rate = (active_days / total_days) * 100
+            
+            st.metric("Activity Rate", f"{activity_rate:.1f}%", 
+                     help="Percentage of days with logged activities")
+        
+        with analysis_tab3:
+            st.subheader("Task Categories Analysis")
+            
+            # Category distribution
+            category_stats = tasks_df.groupby('Category').agg({
+                'Points': ['sum', 'mean', 'count']
+            }).round(2)
+            
+            category_stats.columns = ['Total Points', 'Avg Points', 'Number of Tasks']
+            st.dataframe(category_stats)
+            
+            # Category pie chart
+            fig_pie = px.pie(tasks_df, 
+                           values='Points', 
+                           names='Category',
+                           title='Distribution of Points by Category')
+            st.plotly_chart(fig_pie, use_container_width=True)
+            
+            # Task frequency analysis
+            st.subheader("Most Common Tasks")
+            task_freq = tasks_df['Task'].value_counts().head(10)
+            fig_tasks = px.bar(task_freq,
+                             title='Top 10 Most Frequent Tasks',
+                             labels={'value': 'Count', 'index': 'Task'})
+            st.plotly_chart(fig_tasks, use_container_width=True)
+            
+    else:
+        st.info("Start logging activities to see your analytics!")
+
 # Footer
 st.sidebar.markdown("---")
 st.sidebar.caption("RaízXP - Personal Gamification Tracker")
