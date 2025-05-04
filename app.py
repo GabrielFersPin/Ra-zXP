@@ -67,7 +67,14 @@ st.set_page_config(page_title="InnerLevel | Gamification Tracker", layout="wide"
 
 # Sidebar navigation
 st.sidebar.title("🎮 InnerLevel")
-page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List", "Rewards", "Analytics"])
+page = st.sidebar.radio("Navigation", [
+    "🏠 Dashboard",
+    "📝 Log Activity",
+    "⚡ Manage Habits",
+    "📋 To-Do List", 
+    "🎁 Rewards",
+    "📊 Analytics"
+])
 
 # Helper functions
 def load_task_data():
@@ -106,9 +113,18 @@ def calculate_available_points():
     
     return total_earned - redeemed_points
 
-# Dashboard page
-if page == "Dashboard":
-    st.title("🎯 InnerLevel - Personal Gamification Tracker")
+# Add welcome message and explanation on Dashboard
+if page == "🏠 Dashboard":
+    st.title("🎯 Welcome to InnerLevel")
+    st.markdown("""
+    Transform your learning journey into an exciting adventure! Track your progress, build habits, and earn rewards.
+    
+    **Quick Guide:**
+    - 📝 Log your daily activities to earn points
+    - ⚡ Create habits to stay consistent
+    - 📋 Manage your tasks with the to-do list
+    - 🎁 Redeem points for rewards
+    """)
     
     # Load the latest data
     tasks_df, todo_df, habits_data, rewards_data = load_data()
@@ -163,9 +179,15 @@ if page == "Dashboard":
     else:
         st.info("No to-do items yet. Add some in the 'To-Do List' section!")
 
-# Log Activity page
-elif page == "Log Activity":
+# Add explanatory text for Log Activity
+elif page == "📝 Log Activity":
     st.title("📝 Log Your Activity")
+    st.markdown("""
+    Track your progress by logging activities. Choose from your preset habits or create a custom entry.
+    
+    - **Quick Log**: Use your predefined habits for faster logging
+    - **Custom Activity**: Log any one-time or unique activities
+    """)
     
     tasks_df, todo_df, habits_data, rewards_data = load_data()
     
@@ -261,9 +283,14 @@ elif page == "Log Activity":
     else:
         st.info("No activities match your filter criteria.")
 
-# Manage Habits page
-elif page == "Manage Habits":
-    st.title("⚙️ Manage Your Habits")
+# Add explanatory text for Manage Habits
+elif page == "⚡ Manage Habits":
+    st.title("⚡ Manage Your Habits")
+    st.markdown("""
+    Create and manage your recurring activities. Good habits are the foundation of progress!
+    
+    💡 **Tip**: Start with 2-3 key habits and gradually add more as you build consistency.
+    """)
     
     tasks_df, todo_df, habits_data, rewards_data = load_data()
     
@@ -362,9 +389,17 @@ elif page == "Manage Habits":
                     with open(HABITS_FILE, "r") as f:
                         habits_data = json.load(f)
 
-# To-Do List page
-elif page == "To-Do List":
+# Add explanatory text for To-Do List
+elif page == "📋 To-Do List":
     st.title("📋 To-Do List")
+    st.markdown("""
+    Keep track of your tasks and earn points for completing them!
+    
+    🎯 **Priority Levels:**
+    - 🔴 High: Important and urgent
+    - 🟠 Medium: Important but not urgent
+    - 🟢 Low: Nice to have
+    """)
     
     tasks_df, todo_df, habits_data, rewards_data = load_data()
     
@@ -470,9 +505,14 @@ elif page == "To-Do List":
     else:
         st.info("No to-do items match your filter criteria.")
 
-# Rewards page
-elif page == "Rewards":
+# Add explanatory text for Rewards
+elif page == "🎁 Rewards":
     st.title("🎁 Rewards")
+    st.markdown("""
+    Turn your hard work into rewards! Create custom rewards or choose from presets.
+    
+    ⭐ **Tip**: Set up small rewards for short-term motivation and bigger ones for long-term goals.
+    """)
     
     tasks_df, todo_df, habits_data, rewards_data = load_data()
     
@@ -596,9 +636,18 @@ elif page == "Rewards":
         else:
             st.info("No rewards have been redeemed yet.")
 
-# Analytics page
-elif page == "Analytics":
+# Add explanatory text for Analytics
+elif page == "📊 Analytics":
     st.title("📊 Performance Analytics")
+    st.markdown("""
+    Visualize your progress and identify patterns in your activities.
+    
+    📈 **Track:**
+    - Daily and weekly points
+    - Most productive days
+    - Category distribution
+    - Activity streaks
+    """)
     
     tasks_df, todo_df, habits_data, rewards_data = load_data()
     
@@ -683,8 +732,8 @@ elif page == "Analytics":
     else:
         st.info("Start logging activities to see your analytics!")
 
-# Footer
+# Update the footer with a more engaging message
 st.sidebar.markdown("---")
-st.sidebar.caption("InnerLevel - Personal Gamification Tracker")
-st.sidebar.caption("Designed for non-traditional paths and independent learners")
+st.sidebar.caption("🎮 InnerLevel - Gamify Your Growth")
+st.sidebar.caption("🌱 Making personal development fun and rewarding")
 st.sidebar.caption("© 2025 Gabriel Felipe Fernandes Pinheiro")
