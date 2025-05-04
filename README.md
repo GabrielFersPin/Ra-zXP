@@ -21,7 +21,7 @@ This app keeps me grounded. It shows me that I’m moving, even when the world f
 
 ## 📷 Preview
 
-[Video](/workspaces/Ra-zXP/images/demosntratevideo.webm)
+[Video](images/demosntratevideo.webm)
 
 ## 🔧 How to run the app locally
 
