@@ -492,14 +492,14 @@ elif page == "📋 To-Do List":
                             tasks_df.to_csv(TASKS_FILE, index=False)
                             
                             st.success(f"✅ Task completed: {task} (+{points} points)")
-                            st.experimental_rerun()
+                            st.rerun()
                 
                 with col3:
                     if st.button("Remove", key=f"remove_{task_id}"):
                         todo_df = todo_df[todo_df["ID"] != task_id]
                         todo_df.to_csv(TODO_FILE, index=False)
                         st.success(f"✅ Task removed: {task}")
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 st.markdown("---")
     else:
@@ -566,7 +566,7 @@ elif page == "🎁 Rewards":
                                     json.dump(rewards_data, f, indent=4)
                                 
                                 st.success(f"✅ Reward redeemed: {reward['name']}")
-                                st.experimental_rerun()
+                                st.rerun()
                         else:
                             st.warning(f"Need {reward['points_required'] - available_points} more points")
                 
