@@ -63,10 +63,10 @@ with open(HABITS_FILE, "r") as f:
     habits_data = json.load(f)
 
 # Page layout
-st.set_page_config(page_title="RaízXP | Gamification Tracker", layout="wide")
+st.set_page_config(page_title="InnerLevel | Gamification Tracker", layout="wide")
 
 # Sidebar navigation
-st.sidebar.title("🎮 RaízXP")
+st.sidebar.title("🎮 InnerLevel")
 page = st.sidebar.radio("Navigation", ["Dashboard", "Log Activity", "Manage Habits", "To-Do List", "Rewards", "Analytics"])
 
 # Helper functions
@@ -108,7 +108,7 @@ def calculate_available_points():
 
 # Dashboard page
 if page == "Dashboard":
-    st.title("🎯 RaízXP - Personal Gamification Tracker")
+    st.title("🎯 InnerLevel - Personal Gamification Tracker")
     
     # Load the latest data
     tasks_df, todo_df, habits_data, rewards_data = load_data()
@@ -685,6 +685,6 @@ elif page == "Analytics":
 
 # Footer
 st.sidebar.markdown("---")
-st.sidebar.caption("RaízXP - Personal Gamification Tracker")
+st.sidebar.caption("InnerLevel - Personal Gamification Tracker")
 st.sidebar.caption("Designed for non-traditional paths and independent learners")
 st.sidebar.caption("© 2025 Gabriel Felipe Fernandes Pinheiro")

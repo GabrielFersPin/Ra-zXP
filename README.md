@@ -1,6 +1,6 @@
-# 🎮 RaízXP – Personal Gamification Tracker
+# 🎮 InnerLevel – Personal Gamification Tracker
 
-**RaízXP** is a personal gamification system I created to stay motivated while building habits and searching for my first job in data science. It’s designed for people who take non-traditional paths, learn independently, and value progress that isn’t always linear.
+**InnerLevel** is a personal gamification system I created to stay motivated while building habits and searching for my first job in data science. It’s designed for people who take non-traditional paths, learn independently, and value progress that isn’t always linear.
 
 ## 🚀 What does this app do?
 
@@ -12,20 +12,16 @@
 
 ## 💡 Why I built it
 
-I don’t have a college degree, but I’ve spent years learning, creating, and growing outside the system.  
-Traditional productivity tools never matched how I think or feel — so I created my own.
-
 This app keeps me grounded. It shows me that I’m moving, even when the world feels silent.
 
 ## 🛠️ Tech stack
 
 - [Streamlit](https://streamlit.io/) – for fast interactive UI
-- [Pandas](https://pandas.pydata.org/) – for data storage and tracking
 - Python 3.9+
 
 ## 📷 Screenshot
 
-_Add a screenshot or GIF demo here to make the post more engaging_
+
 
 ## 🔧 How to run the app locally
 
