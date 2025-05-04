@@ -19,9 +19,9 @@ This app keeps me grounded. It shows me that I’m moving, even when the world f
 - [Streamlit](https://streamlit.io/) – for fast interactive UI
 - Python 3.9+
 
-## 📷 Screenshot
+## 📷 Preview
 
-
+[Video](/workspaces/Ra-zXP/images/demosntratevideo.webm)
 
 ## 🔧 How to run the app locally
 
